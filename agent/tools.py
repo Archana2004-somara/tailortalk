@@ -1,26 +1,24 @@
-import requests
+from datetime import datetime
+from dateutil import parser
 from langchain.tools import tool
-
-API_BASE = "http://127.0.0.1:8000"
+from gcalendar.calendar_utils import check_availability, create_event
 
 @tool
 def check_calendar(start_time: str, end_time: str) -> str:
-    """Check if the specified time slot is available in Google Calendar."""
-    response = requests.post(f"{API_BASE}/check-availability", json={
-        "start_time": start_time,
-        "end_time": end_time
-    })
-    data = response.json()
-    return "Available ✅" if data.get("available") else f"Busy ❌: {data.get('busy')}"
+    """Check if a time slot is free between start_time and end_time."""
+    start_dt = parser.parse(start_time)
+    now = datetime.now()
+    if start_dt < now:
+        return "❌ Cannot check past time. Please select a future time slot."
+    available = check_availability(start_time, end_time)
+    return "✅ Slot is available." if available else "❌ Slot is already booked."
 
 @tool
 def book_calendar(start_time: str, end_time: str, summary: str) -> str:
-    """Book a Google Calendar event between the given times with a summary."""
-    response = requests.post(f"{API_BASE}/book", json={
-        "start_time": start_time,
-        "end_time": end_time,
-        "summary": summary,
-        "description": "Booked via TailorTalk"
-    })
-    data = response.json()
-    return f"Event booked! 📅 Link: {data.get('event_link')}"
+    """Book a calendar meeting using start_time, end_time and summary."""
+    start_dt = parser.parse(start_time)
+    now = datetime.now()
+    if start_dt < now:
+        return "❌ Cannot book a meeting in the past. Please choose a future time."
+    event = create_event(start_time, end_time, summary)
+    return f"✅ Meeting booked: {event['htmlLink']}"
