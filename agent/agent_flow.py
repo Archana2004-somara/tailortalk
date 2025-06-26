@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-llm = ChatOpenAI(temperature=0.3, model="gpt-4", openai_api_key=os.getenv("OPENAI_API_KEY"))
+llm = ChatOpenAI(temperature=0.3, model="gpt-3.5-turbo", openai_api_key=os.getenv("OPENAI_API_KEY"))
 
 tools = [
     Tool.from_function(
