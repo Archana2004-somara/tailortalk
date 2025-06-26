@@ -7,7 +7,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-llm = ChatOpenAI(temperature=0.3, model="gpt-3.5-turbo", openai_api_key=os.getenv("OPENAI_API_KEY"))
+# ✅ FREE OpenRouter model instead of OpenAI GPT
+llm = ChatOpenAI(
+    temperature=0.3,
+    model="mistralai/mistral-7b-instruct",  # ✅ Fast + free model
+    openai_api_key=os.getenv("OPENROUTER_API_KEY"),
+    openai_api_base="https://openrouter.ai/api/v1"
+)
 
 tools = [
     Tool.from_function(
@@ -30,4 +36,13 @@ agent = initialize_agent(
 )
 
 def run_agent(message: str) -> str:
-    return agent.run(message)
+    try:
+        if not message.strip():
+            return "⚠️ Please enter a valid message to book a meeting."
+
+        if " and " in message or "then" in message:
+            return "⚠️ I can only book one meeting at a time. Please ask for one slot per message."
+
+        return agent.run(message)
+    except Exception as e:
+        return f"❌ Something went wrong: {str(e)}"
