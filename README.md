@@ -1,22 +1,42 @@
 TailorTalk – AI Calendar Booking Agent
 
-TailorTalk is an AI-powered assistant that helps users schedule meetings via natural chat. It checks availability, suggests slots, and books meetings directly on your Google Calendar — all through a smooth conversational UI.
+TailorTalk is a conversational AI agent that books appointments directly into your Google Calendar. Users can simply type messages like “Book a meeting tomorrow at 4 PM” and the agent handles the rest.
+
+Built using LangChain, Streamlit, and the Google Calendar API, it also uses OpenRouter’s free LLMs like `mistralai/mistral-7b-instruct`.
+ Features
+
+- ✅ Book meetings in your Google Calendar
+- 📆 Check availability before booking
+- 🔐 OAuth2-based secure calendar access
+- 💬 Natural language via OpenRouter LLM
+- ⚠️ Handles invalid/past/multiple meeting requests
+- 🧪 Test script to validate meeting booking independently
+
+ How It Works
+
+Example prompts:
+Book a meeting for tomorrow at 4 PM
+Am I free Friday between 3 and 5 PM?
+
+The AI checks your calendar and responds accordingly — if credits are available.
 
 ---
 
-Features
+ Note:
 
-- Conversational interface with Streamlit
--LangGraph-powered agent using GPT-style models
--Google Calendar integration (check & book)
--Modular project structure (agent/, backend/, frontend/, gcalendar/)
-- Rejects invalid or past time slots
-- Gracefully handles fallback messages and multiple requests
+Agent integration with Google Calendar is complete.  
+Due to LLM credit limits on OpenRouter, automated replies are currently unavailable.
 
-Example Prompts
+A fallback script (`gcalendar/test_calendar.py`) confirms full booking functionality.
 
-```plaintext
-• Book a meeting for tomorrow at 3 PM
-• Do you have any free time on Friday?
-• Check if 10 AM to 11 AM next Wednesday is free
-• Schedule a 30-minute call next week
+---
+Screenshots
+App UI with Logo
+![TailorTalk UI](frontend/tailortalk-ui.png.jpg)
+
+OpenRouter API Limit Error
+![Error Message](frontend/booking.png.jpg)
+Agent integration with Google Calendar is complete.
+(frontend/test_calendar.py.jpg)
+
+Something went wrong: Error code: 402 - {'error': {'message': 'Insufficient credits. Add more using https://openrouter.ai/settings/credits', 'code': 402}}
